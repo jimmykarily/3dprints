@@ -1,8 +1,8 @@
 // Connector height in mm
-ConnectorHeight=200;
+ConnectorHeight=220;
 
 // Connector length in mm
-ConnectorLength=200;
+ConnectorLength=180;
 
 // The pipe diameter in mm
 PipeDiameter=22;
@@ -13,18 +13,18 @@ ThicknessAroundPipe = 10;
 
 // Screw offset in mm
 // This is the part near the edge where the screws go
-ScrewOffset = 0;
+ScrewOffset = 20;
 
 // Screw diameter in mm
 ScrewDiameter = 4;
 
 //// Calculated
 ConnectorWidth = PipeDiameter + ThicknessAroundPipe * 2;
-RemovedTopHeight = ConnectorWidth * (ConnectorLength - ConnectorWidth) / (ConnectorHeight - ConnectorWidth);
+RemovedTopHeight = ConnectorWidth * (ConnectorLength - ConnectorWidth - ScrewOffset) / (ConnectorHeight - ConnectorWidth);
 TriangleLengthBeforeCuts = ConnectorLength + RemovedTopHeight;
 
 // How much in 'y' to move to get a square cut
-CutHeight = (ConnectorWidth * ConnectorHeight) / (2 * (ConnectorLength + RemovedTopHeight - ConnectorWidth));
+CutHeight = ((ConnectorWidth+ScrewOffset) * ConnectorHeight) / (2 * (ConnectorLength + RemovedTopHeight - (ConnectorWidth+ScrewOffset)));
 TriangleHeightBeforeCuts = ConnectorHeight + 2*CutHeight;
 
 FirstCutY = CutHeight;
@@ -78,7 +78,7 @@ module Pipe2() {
   }
 }
 
-translate([0,-CutHeight,0])
+//translate([0,-CutHeight,0])
 Connector();
-//Pipe1(); // Show the pipe #1
-//Pipe2(); // Show the pipe #2
+Pipe1(); // Show the pipe #1
+Pipe2(); // Show the pipe #2
