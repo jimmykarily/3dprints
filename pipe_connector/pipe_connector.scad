@@ -61,6 +61,8 @@ module Connector() {
     translate([ScrewOffset+ThicknessAroundPipe*2+PipeDiameter, FirstCutY + ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
 
+    translate([ScrewOffset+ThicknessAroundPipe*2+PipeDiameter, FirstCutY + 3*ConnectorHeight/4,0])
+    cylinder(h=ConnectorWidth,r=ScrewDiameter);
   }
 }
 
