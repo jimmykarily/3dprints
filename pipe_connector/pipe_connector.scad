@@ -1,23 +1,29 @@
 // Connector height in mm
-ConnectorHeight=50;
+ConnectorHeight=60;
 
 // Connector length in mm
-ConnectorLength=40;
+ConnectorLength=100;
 
 // Connector width in mm
-ConnectorWidth=10;
+ConnectorWidth=42;
+
+//// Calculated
+// How much in 'y' to move to get a square cut
+CutHeight = (ConnectorWidth * ConnectorHeight/2) / ConnectorLength;
+TriangleHeightBeforeCuts = ConnectorHeight + 2*CutHeight;
 
 module Connector() {
   difference() {
     // Basic triangle
     linear_extrude(height = ConnectorWidth, convexity = 10, twist = 0)
-    polygon(points=[[0,0], [0, ConnectorHeight], [ConnectorLength, ConnectorHeight/2]]);
+    polygon(points=[[0,0], [0, TriangleHeightBeforeCuts], [ConnectorLength, TriangleHeightBeforeCuts/2]]);
 
     // Cut the edges so we get a square face
-    y = (ConnectorWidth * ConnectorHeight/2) / ConnectorLength;
+    y = (ConnectorWidth * TriangleHeightBeforeCuts/2) / ConnectorLength;
     //translate([0, -ConnectorWidth/2, 0])
     cube([ConnectorLength, y, ConnectorWidth]);
-    translate([0, ConnectorHeight-ConnectorWidth/2, 0])
+
+    translate([0, TriangleHeightBeforeCuts-y, 0])
     cube([ConnectorLength, ConnectorWidth, ConnectorWidth]);
   }
 }
