@@ -1,8 +1,8 @@
 // Connector height in mm
-ConnectorHeight=140;
+ConnectorHeight=180;
 
 // Connector length in mm
-ConnectorLength=140;
+ConnectorLength=150;
 
 // The pipe diameter in mm
 PipeDiameter=22;
@@ -19,14 +19,15 @@ ScrewOffset = 20;
 ScrewDiameter = 4;
 
 //// Calculated
-// How much in 'y' to move to get a square cut
 ConnectorWidth = PipeDiameter + ThicknessAroundPipe * 2;
-CutHeight = (ConnectorWidth * ConnectorHeight/2) / ConnectorLength;
+// How much in 'y' to move to get a square cut
+//CutHeight = (ConnectorWidth * ConnectorHeight/2) / ConnectorLength;
+//CutHeight = (ConnectorWidth + ScrewOffset) * ConnectorHeight / (2 * (ConnectorWidth + ScrewOffset - ConnectorLength));
+CutHeight = -(ConnectorHeight * (ConnectorWidth + ScrewOffset)) / (2 * (ConnectorWidth + ScrewOffset - ConnectorLength));
 TriangleHeightBeforeCuts = ConnectorHeight + 2*CutHeight;
-TriangleLengthBeforeCuts = ConnectorLength + CutHeight;
+TriangleLengthBeforeCuts = ConnectorLength * TriangleHeightBeforeCuts / (TriangleHeightBeforeCuts - ConnectorWidth);
 
-
-FirstCutY = ((ConnectorWidth+ScrewOffset) * TriangleHeightBeforeCuts/2) / TriangleLengthBeforeCuts;
+FirstCutY = CutHeight;
 SecondCutY = TriangleHeightBeforeCuts - FirstCutY;
 
 module Connector() {
@@ -39,10 +40,10 @@ module Connector() {
     cube([TriangleLengthBeforeCuts, FirstCutY, ConnectorWidth]);
 
     translate([0, SecondCutY, 0])
-    cube([TriangleLengthBeforeCuts, ConnectorWidth, ConnectorWidth]);
+    cube([TriangleLengthBeforeCuts, ConnectorHeight, ConnectorWidth]);
 
     // Cut also the top of the triangle (far "x" side)
-    x = (TriangleLengthBeforeCuts * (TriangleHeightBeforeCuts - ConnectorWidth) / TriangleHeightBeforeCuts);
+    x = ConnectorLength;
     translate([x, TriangleHeightBeforeCuts/2 - ConnectorWidth / 2, 0])
     cube([TriangleLengthBeforeCuts, ConnectorWidth, ConnectorWidth]);
 
@@ -50,11 +51,12 @@ module Connector() {
     Pipe1();
     Pipe2();
 
-
     // Drill holes for the screws
     translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
 
+    translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + 3*ConnectorHeight/4,0])
+    cylinder(h=ConnectorWidth,r=ScrewDiameter);
   }
 }
 
