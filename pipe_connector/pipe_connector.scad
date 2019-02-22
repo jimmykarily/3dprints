@@ -1,8 +1,8 @@
 // Connector height in mm
-ConnectorHeight=180;
+ConnectorHeight=200;
 
 // Connector length in mm
-ConnectorLength=150;
+ConnectorLength=200;
 
 // The pipe diameter in mm
 PipeDiameter=22;
@@ -13,19 +13,19 @@ ThicknessAroundPipe = 10;
 
 // Screw offset in mm
 // This is the part near the edge where the screws go
-ScrewOffset = 20;
+ScrewOffset = 0;
 
 // Screw diameter in mm
 ScrewDiameter = 4;
 
 //// Calculated
 ConnectorWidth = PipeDiameter + ThicknessAroundPipe * 2;
+RemovedTopHeight = ConnectorWidth * (ConnectorLength - ConnectorWidth) / (ConnectorHeight - ConnectorWidth);
+TriangleLengthBeforeCuts = ConnectorLength + RemovedTopHeight;
+
 // How much in 'y' to move to get a square cut
-//CutHeight = (ConnectorWidth * ConnectorHeight/2) / ConnectorLength;
-//CutHeight = (ConnectorWidth + ScrewOffset) * ConnectorHeight / (2 * (ConnectorWidth + ScrewOffset - ConnectorLength));
-CutHeight = -(ConnectorHeight * (ConnectorWidth + ScrewOffset)) / (2 * (ConnectorWidth + ScrewOffset - ConnectorLength));
+CutHeight = (ConnectorWidth * ConnectorHeight) / (2 * (ConnectorLength + RemovedTopHeight - ConnectorWidth));
 TriangleHeightBeforeCuts = ConnectorHeight + 2*CutHeight;
-TriangleLengthBeforeCuts = ConnectorLength * TriangleHeightBeforeCuts / (TriangleHeightBeforeCuts - ConnectorWidth);
 
 FirstCutY = CutHeight;
 SecondCutY = TriangleHeightBeforeCuts - FirstCutY;
@@ -47,7 +47,7 @@ module Connector() {
     translate([x, TriangleHeightBeforeCuts/2 - ConnectorWidth / 2, 0])
     cube([TriangleLengthBeforeCuts, ConnectorWidth, ConnectorWidth]);
 
-    // Drill a holes for the pipes
+    // Drill holes for the pipes
     Pipe1();
     Pipe2();
 
@@ -57,6 +57,10 @@ module Connector() {
 
     translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + 3*ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
+
+    translate([ScrewOffset+ThicknessAroundPipe*2+PipeDiameter, FirstCutY + ConnectorHeight/4,0])
+    cylinder(h=ConnectorWidth,r=ScrewDiameter);
+
   }
 }
 
@@ -74,6 +78,7 @@ module Pipe2() {
   }
 }
 
+translate([0,-CutHeight,0])
 Connector();
 //Pipe1(); // Show the pipe #1
 //Pipe2(); // Show the pipe #2
