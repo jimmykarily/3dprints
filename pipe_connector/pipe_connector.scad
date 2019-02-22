@@ -15,12 +15,19 @@ ThicknessAroundPipe = 10;
 // This is the part near the edge where the screws go
 ScrewOffset = 20;
 
+// Screw diameter in mm
+ScrewDiameter = 4;
+
 //// Calculated
 // How much in 'y' to move to get a square cut
 ConnectorWidth = PipeDiameter + ThicknessAroundPipe * 2;
 CutHeight = (ConnectorWidth * ConnectorHeight/2) / ConnectorLength;
 TriangleHeightBeforeCuts = ConnectorHeight + 2*CutHeight;
 TriangleLengthBeforeCuts = ConnectorLength + CutHeight;
+
+
+FirstCutY = ((ConnectorWidth+ScrewOffset) * TriangleHeightBeforeCuts/2) / TriangleLengthBeforeCuts;
+SecondCutY = TriangleHeightBeforeCuts - FirstCutY;
 
 module Connector() {
   difference() {
@@ -29,10 +36,9 @@ module Connector() {
     polygon(points=[[0,0], [0, TriangleHeightBeforeCuts], [TriangleLengthBeforeCuts, TriangleHeightBeforeCuts/2]]);
 
     // Cut the edges so we get a square face (plus the screw offset)
-    y = ((ConnectorWidth+ScrewOffset) * TriangleHeightBeforeCuts/2) / TriangleLengthBeforeCuts;
-    cube([TriangleLengthBeforeCuts, y, ConnectorWidth]);
+    cube([TriangleLengthBeforeCuts, FirstCutY, ConnectorWidth]);
 
-    translate([0, TriangleHeightBeforeCuts-y, 0])
+    translate([0, SecondCutY, 0])
     cube([TriangleLengthBeforeCuts, ConnectorWidth, ConnectorWidth]);
 
     // Cut also the top of the triangle (far "x" side)
@@ -40,9 +46,15 @@ module Connector() {
     translate([x, TriangleHeightBeforeCuts/2 - ConnectorWidth / 2, 0])
     cube([TriangleLengthBeforeCuts, ConnectorWidth, ConnectorWidth]);
 
-    // Drill a hole for the first pipe
+    // Drill a holes for the pipes
     Pipe1();
     Pipe2();
+
+
+    // Drill holes for the screws
+    translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + ConnectorHeight/4,0])
+    cylinder(h=ConnectorWidth,r=ScrewDiameter);
+
   }
 }
 
