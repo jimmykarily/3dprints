@@ -1,8 +1,8 @@
 // Connector height in mm
-ConnectorHeight=60;
+ConnectorHeight=100;
 
 // Connector length in mm
-ConnectorLength=100;
+ConnectorLength=110;
 
 // Connector width in mm
 ConnectorWidth=42;
@@ -25,7 +25,10 @@ module Connector() {
 
     translate([0, TriangleHeightBeforeCuts-y, 0])
     cube([ConnectorLength, ConnectorWidth, ConnectorWidth]);
+
+    x = (ConnectorLength * (TriangleHeightBeforeCuts - ConnectorWidth) / TriangleHeightBeforeCuts);
+    translate([x, TriangleHeightBeforeCuts/2 - ConnectorWidth / 2, 0])
+    cube([ConnectorLength, ConnectorWidth, ConnectorWidth]);
   }
 }
 Connector();
-//cube(ConnectorWidth);
