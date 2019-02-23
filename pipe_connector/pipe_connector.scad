@@ -1,8 +1,13 @@
+// Height: The y axis
+// Length: The x axis
+// Width: The z axis
+
+
 // Connector height in mm
-ConnectorHeight=220;
+ConnectorHeight=80;
 
 // Connector length in mm
-ConnectorLength=180;
+ConnectorLength=80;
 
 // The pipe diameter in mm
 PipeDiameter=22;
@@ -13,10 +18,13 @@ ThicknessAroundPipe = 10;
 
 // Screw offset in mm
 // This is the part near the edge where the screws go
-ScrewOffset = 20;
+ScrewOffset = 10;
 
 // Screw diameter in mm
 ScrewDiameter = 4;
+
+// Gap between the 2 pieces
+GapBetweenPieces = 7;
 
 //// Calculated
 ConnectorWidth = PipeDiameter + ThicknessAroundPipe * 2;
@@ -58,11 +66,19 @@ module Connector() {
     translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + 3*ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
 
-    translate([ScrewOffset+ThicknessAroundPipe*2+PipeDiameter, FirstCutY + ConnectorHeight/4,0])
+    // Play with the next 2 to move the holes close to the edge
+    translate([ScrewOffset+ThicknessAroundPipe*3+PipeDiameter, FirstCutY + ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
 
-    translate([ScrewOffset+ThicknessAroundPipe*2+PipeDiameter, FirstCutY + 3*ConnectorHeight/4,0])
+    translate([ScrewOffset+ThicknessAroundPipe*3+PipeDiameter, FirstCutY + 3*ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
+
+    // Create the gap between pieces and remove the top part
+    translate([0, CutHeight, ConnectorWidth/2 - GapBetweenPieces/2]) {
+      cube([ConnectorLength, ConnectorHeight, GapBetweenPieces]);
+      // Delete the top part
+      //cube([ConnectorLength, ConnectorHeight, GapBetweenPieces + ConnectorWidth]);
+    }
   }
 }
 
@@ -80,7 +96,8 @@ module Pipe2() {
   }
 }
 
-//translate([0,-CutHeight,0])
-Connector();
-Pipe1(); // Show the pipe #1
-Pipe2(); // Show the pipe #2
+translate([0,-CutHeight,0]) {
+  Connector();
+  Pipe1(); // Show the pipe #1
+  Pipe2(); // Show the pipe #2
+}
