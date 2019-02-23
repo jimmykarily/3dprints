@@ -21,7 +21,7 @@ ThicknessAroundPipe = 6;
 ScrewOffset = 10;
 
 // Screw diameter in mm
-ScrewDiameter = 4;
+ScrewDiameter = 6.1;
 
 // Gap between the 2 pieces
 GapBetweenPieces = 7;
@@ -61,17 +61,17 @@ module Connector() {
 
     // Drill holes for the screws
     translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + ConnectorHeight/4,0])
-    cylinder(h=ConnectorWidth,r=ScrewDiameter);
+    cylinder(h=ConnectorWidth,d=ScrewDiameter);
 
     translate([(ScrewOffset+ThicknessAroundPipe)/2, FirstCutY + 3*ConnectorHeight/4,0])
-    cylinder(h=ConnectorWidth,r=ScrewDiameter);
+    cylinder(h=ConnectorWidth,d=ScrewDiameter);
 
     // Play with the next 2 to move the holes close to the edge
     translate([ScrewOffset+ThicknessAroundPipe*3+PipeDiameter, FirstCutY + ConnectorHeight/4,0])
-    cylinder(h=ConnectorWidth,r=ScrewDiameter);
+    cylinder(h=ConnectorWidth,d=ScrewDiameter);
 
     translate([ScrewOffset+ThicknessAroundPipe*3+PipeDiameter, FirstCutY + 3*ConnectorHeight/4,0])
-    cylinder(h=ConnectorWidth,r=ScrewDiameter);
+    cylinder(h=ConnectorWidth,d=ScrewDiameter);
 
     // Create the gap between pieces and remove the top part
     translate([0, 0, ConnectorWidth/2 - GapBetweenPieces/2]) {
