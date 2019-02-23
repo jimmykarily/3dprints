@@ -74,10 +74,10 @@ module Connector() {
     cylinder(h=ConnectorWidth,r=ScrewDiameter);
 
     // Create the gap between pieces and remove the top part
-    translate([0, CutHeight, ConnectorWidth/2 - GapBetweenPieces/2]) {
-      cube([ConnectorLength, ConnectorHeight, GapBetweenPieces]);
+    translate([0, 0, ConnectorWidth/2 - GapBetweenPieces/2]) {
+      cube([ConnectorLength * 2, ConnectorHeight * 2, GapBetweenPieces]);
       // Delete the top part
-      //cube([ConnectorLength, ConnectorHeight, GapBetweenPieces + ConnectorWidth]);
+      cube([ConnectorLength * 2, ConnectorHeight * 2, GapBetweenPieces + ConnectorWidth]);
     }
   }
 }
@@ -98,6 +98,6 @@ module Pipe2() {
 
 translate([0,-CutHeight,0]) {
   Connector();
-  Pipe1(); // Show the pipe #1
-  Pipe2(); // Show the pipe #2
+//  Pipe1(); // Show the pipe #1
+//  Pipe2(); // Show the pipe #2
 }
