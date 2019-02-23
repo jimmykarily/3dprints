@@ -14,7 +14,7 @@ PipeDiameter=22;
 
 // The extra material around the pipe.
 // Measure this on one side.
-ThicknessAroundPipe = 10;
+ThicknessAroundPipe = 6;
 
 // Screw offset in mm
 // This is the part near the edge where the screws go
