@@ -21,7 +21,7 @@ ThicknessAroundPipe = 6;
 ScrewOffset = 10;
 
 // Screw diameter in mm
-ScrewDiameter = 6.1;
+ScrewDiameter = 6.8;
 
 // Gap between the 2 pieces
 GapBetweenPieces = 7;
