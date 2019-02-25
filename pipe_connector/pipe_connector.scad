@@ -23,6 +23,9 @@ ScrewOffset = 10;
 // Screw diameter in mm
 ScrewDiameter = 6.8;
 
+// The diameter of the screw that fixes the vertical pipe in place
+VerticalPipeScrewDiameter = 4;
+
 // Gap between the 2 pieces
 GapBetweenPieces = 7;
 
@@ -72,6 +75,10 @@ module Connector() {
 
     translate([ScrewOffset+ThicknessAroundPipe*3+PipeDiameter, FirstCutY + 3*ConnectorHeight/4,0])
     cylinder(h=ConnectorWidth,d=ScrewDiameter);
+
+    // Drill a hole to "fix" the vertical pipe (it's not supposed to turn)
+    translate([ConnectorLength - ScrewOffset, FirstCutY + ConnectorHeight/2,0])
+    cylinder(h=ConnectorWidth,d=VerticalPipeScrewDiameter);
 
     // Create the gap between pieces and remove the top part
     translate([0, 0, ConnectorWidth/2 - GapBetweenPieces/2]) {
