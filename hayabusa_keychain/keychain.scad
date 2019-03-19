@@ -10,8 +10,7 @@ CLIP_HEIGHT_PERCENTAGE=1; // The percentage compared to the height of the main c
 
 
 module logo_centered(size) {
-  translate([0,0,5])
-  scale(0.13)
+  scale(v=[0.13, 0.13, 1])
   rotate([0,0,90])
   logo(size);
 }
@@ -34,9 +33,8 @@ module rounded_ring(r,t,h,n) {
 }
 
 
-union() {
-  logo_centered(8);
 
+module base() {
   // Base cylinder
   union() {
     rounded_ring(r=DIAMETER/2, t=RING_THICKNESS, h=HEIGHT,n=RING_THICKNESS/5,$fn=60);
@@ -48,8 +46,7 @@ union() {
   }
 }
 
-/*
-//linear_extrude(height = 40)
-scale([1,1,0.1])
-surface(file="logo_text.png", invert=true, center=true, convexity=5);
-*/
+union() {
+  logo_centered(6);
+  base();
+}
