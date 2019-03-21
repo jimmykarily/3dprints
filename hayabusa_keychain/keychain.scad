@@ -47,6 +47,6 @@ module base() {
 }
 
 union() {
-  logo_centered(6);
+  logo_centered(5.5);
   base();
 }
