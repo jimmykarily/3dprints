@@ -24,7 +24,7 @@ ScrewOffset = 10;
 ScrewDiameter = 6.8;
 
 // The diameter of the screw that fixes the vertical pipe in place
-VerticalPipeScrewDiameter = 4;
+VerticalPipeScrewDiameter = 6;
 
 // Gap between the 2 pieces
 GapBetweenPieces = 7;
