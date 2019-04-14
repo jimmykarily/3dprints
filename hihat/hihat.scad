@@ -1,56 +1,45 @@
+// Settings
 $fn=60;
-Diameter = 220;
+Radius = 200;
 HoleDiameter = 10;
-Thickness=3;
-HoleEnforcementThickness=HoleDiameter*2;
-BaseMargin=10; // The margic of the base for the screws
-BaseAngle=90;
+HoleEnforcementThickness=HoleDiameter;
+Thickness=10;
+BaseAngle=80; // Works for 0 to ~250 degrees
 
+
+// Calculated values
+holeCenterY = HoleEnforcementThickness + HoleDiameter/2;
+holeCenterX = holeCenterY / tan(BaseAngle/2);
 
 // NOTE: Needs openscad 2016.xx+ (for the angle parameter to work)
-// d -> diameter of the pie
+// r -> radius of the pie
 // h -> Thickness of the pie
 // a -> angle of the slice
-module pie_slice(d,h,a) {
+module pie_slice(r,h,a) {
+  translate([0,0,h/2])
   rotate_extrude(convexity = 10, angle=a)
-  translate([0,-h/2,0]) square(size=[d/2,h]);
-}
-
-difference() {
-  // Main cylinder
-  cylinder(d=Diameter, h=Thickness, center=true);
-
-  union() {
-    // Central hole
-    cylinder(d=HoleDiameter, h=Thickness, center=true);
-    difference() {
-      // (+1 to cut all the way and not leave one pixel)
-      pie_slice(d=Diameter+1, h=Thickness,  a=BaseAngle);
-      cylinder(d=HoleDiameter+HoleEnforcementThickness, h=Thickness, center=true);
-    }
-  }
+  translate([0,-h/2,0]) square(size=[r,h]);
 }
 
 // The sensor base.
-// Let the main cylinder touch the sensor base
-// (that's why we don't move it all the way down)
-translate([0,0,-Thickness*0.9]) {
-  difference() {
-    intersection() { // Cut out the margin edges
-      union() {
-        pie_slice(d=Diameter, h=Thickness, a=BaseAngle);
-        // The margins of the base for the screws
-        // One side margin
-        translate([0,-BaseMargin, -Thickness/2])
-        cube([Diameter/2, BaseMargin,Thickness]);
+module base() {
+  union() {
+    difference() {
+      pie_slice(r=Radius, h=Thickness, a=BaseAngle);
 
-        // Second side margin
-        rotate([0,0,BaseAngle])
-        translate([0,0, -Thickness/2])
-        cube([Diameter/2, BaseMargin,Thickness]);
-      }
-      cylinder(d=Diameter, h=Thickness, center=true);
+      // Remove the non-needed tip of the pie slice
+      translate([holeCenterX, holeCenterY,0])
+      rotate([0,0,BaseAngle+90])
+      pie_slice(r=Radius, h=Thickness, a=180-BaseAngle);
     }
-    cylinder(d=HoleDiameter+HoleEnforcementThickness, h=Thickness, center=true);
+    translate([holeCenterX, holeCenterY, Thickness/2])
+    cylinder(d=HoleDiameter+2*HoleEnforcementThickness, h=Thickness, center=true);
   }
+}
+
+difference() {
+  base();
+  // Base hole
+  translate([holeCenterX, holeCenterY, Thickness/2])
+  cylinder(d=HoleDiameter, h=Thickness, center=true);
 }
