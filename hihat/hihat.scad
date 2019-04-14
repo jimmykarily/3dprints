@@ -7,9 +7,9 @@ Thickness=20;
 BaseAngle=110; // Works for 0 to ~250 degrees
 MembraneThickness=3;
 MembraneGap=5;
+SensorCableHoleDiameter=5;
 
 // TODO:
-// - Create a hole for the jack
 // - Create the mount
 
 // Calculated values
@@ -69,5 +69,10 @@ difference() {
     pie_slice(r=basicSliceRadius-holeCenterX, h=Thickness/2, a=BaseAngle);
     mountRing();
   }
-}
 
+  // Sensor cable hole
+  sensorCableHoleCenterX = holeCenterX + HoleEnforcementThickness + 3;
+  sensorCableHoleCenterY = sensorCableHoleCenterX * tan(BaseAngle/2);
+  translate([sensorCableHoleCenterX, sensorCableHoleCenterY, Thickness/2])
+  cylinder(d=SensorCableHoleDiameter, h=Thickness, center=true);
+}
