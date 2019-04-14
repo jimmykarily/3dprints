@@ -8,6 +8,7 @@ BaseAngle=110; // Works for 0 to ~250 degrees
 MembraneThickness=3;
 MembraneGap=5;
 SensorCableHoleDiameter=5;
+MountHeight=40;
 
 // TODO:
 // - Create the mount
@@ -28,9 +29,18 @@ module pie_slice(r,h,a) {
   }
 }
 
+module mountHole() {
+  translate([holeCenterX, holeCenterY, MountHeight/2])
+  cylinder(d=HoleDiameter, h=MountHeight, center=true);
+}
+
 module mountRing() {
-  translate([holeCenterX, holeCenterY, Thickness/2])
-  cylinder(d=HoleDiameter+2*HoleEnforcementThickness, h=Thickness, center=true);
+  difference() {
+    translate([holeCenterX, holeCenterY,MountHeight/2])
+    cylinder(d=HoleDiameter+2*HoleEnforcementThickness, h=MountHeight, center=true);
+
+    mountHole();
+  }
 }
 
 // The sensor base.
@@ -44,35 +54,30 @@ module base() {
       rotate([0,0,BaseAngle+90])
       pie_slice(r=Radius, h=Thickness, a=180-BaseAngle);
     }
-    mountRing();
   }
 }
 
 difference() {
   base();
-  // Base hole
-  translate([holeCenterX, holeCenterY, Thickness/2])
-  cylinder(d=HoleDiameter, h=Thickness, center=true);
 
   // Sensor pocket (deep one, without the margin)
   membraneMarginY = HoleEnforcementThickness + HoleDiameter/2 + MembraneThickness * 2;
   membraneMarginX = membraneMarginY / tan(BaseAngle/2);
-  difference() {
-    translate([membraneMarginX, membraneMarginY, Thickness - MembraneThickness - MembraneGap])
-    pie_slice(r=basicSliceRadius, h=Thickness, a=BaseAngle);
-    mountRing();
-  }
+  translate([membraneMarginX, membraneMarginY, Thickness - MembraneThickness - MembraneGap])
+  pie_slice(r=basicSliceRadius, h=Thickness, a=BaseAngle);
 
   // Sensor pocket (shallow one, with the margin)
-  difference() {
-    translate([holeCenterX, holeCenterY, Thickness - MembraneThickness])
-    pie_slice(r=basicSliceRadius-holeCenterX, h=Thickness/2, a=BaseAngle);
-    mountRing();
-  }
+  translate([holeCenterX, holeCenterY, Thickness - MembraneThickness])
+  pie_slice(r=basicSliceRadius-holeCenterX, h=Thickness/2, a=BaseAngle);
 
   // Sensor cable hole
   sensorCableHoleCenterX = holeCenterX + HoleEnforcementThickness + 3;
   sensorCableHoleCenterY = sensorCableHoleCenterX * tan(BaseAngle/2);
   translate([sensorCableHoleCenterX, sensorCableHoleCenterY, Thickness/2])
   cylinder(d=SensorCableHoleDiameter, h=Thickness, center=true);
+
+  mountHole();
 }
+
+// The mount
+mountRing();
