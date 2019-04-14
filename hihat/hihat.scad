@@ -3,9 +3,14 @@ $fn=60;
 Radius = 200; // Distance from the center of the hole to the edge
 HoleDiameter = 10;
 HoleEnforcementThickness=HoleDiameter;
-Thickness=10;
+Thickness=20;
 BaseAngle=110; // Works for 0 to ~250 degrees
+MembraneThickness=3;
+MembraneGap=5;
 
+// TODO:
+// - Create a hole for the jack
+// - Create the mount
 
 // Calculated values
 holeCenterY = HoleEnforcementThickness + HoleDiameter/2;
@@ -17,9 +22,10 @@ basicSliceRadius = Radius+holeCenterX+HoleDiameter/2;
 // h -> Thickness of the pie
 // a -> angle of the slice
 module pie_slice(r,h,a) {
-  translate([0,0,h/2])
-  rotate_extrude(convexity = 10, angle=a)
-  translate([0,-h/2,0]) square(size=[r,h]);
+  translate([0,0,h/2]) {
+    rotate_extrude(convexity = 10, angle=a)
+    translate([0,-h/2,0]) square(size=[r,h]);
+  }
 }
 
 module mountRing() {
@@ -48,9 +54,18 @@ difference() {
   translate([holeCenterX, holeCenterY, Thickness/2])
   cylinder(d=HoleDiameter, h=Thickness, center=true);
 
-  // Sensor pocket
+  // Sensor pocket (deep one, without the margin)
+  membraneMarginY = HoleEnforcementThickness + HoleDiameter/2 + MembraneThickness * 2;
+  membraneMarginX = membraneMarginY / tan(BaseAngle/2);
   difference() {
-    translate([holeCenterX, holeCenterY, Thickness/2])
+    translate([membraneMarginX, membraneMarginY, Thickness - MembraneThickness - MembraneGap])
+    pie_slice(r=basicSliceRadius, h=Thickness, a=BaseAngle);
+    mountRing();
+  }
+
+  // Sensor pocket (shallow one, with the margin)
+  difference() {
+    translate([holeCenterX, holeCenterY, Thickness - MembraneThickness])
     pie_slice(r=basicSliceRadius-holeCenterX, h=Thickness/2, a=BaseAngle);
     mountRing();
   }
