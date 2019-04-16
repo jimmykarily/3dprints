@@ -1,15 +1,18 @@
+// https://github.com/JohK/nutsnbolts
+include <../nutsnbolts/cyl_head_bolt.scad>;
+
 // Settings
 $fn=60;
 Radius = 180; // Distance from the center of the hole to the edge
 HoleDiameter = 6;
-HoleEnforcementThickness=HoleDiameter;
+HoleEnforcementThickness=HoleDiameter*1.5;
 Thickness=10;
 BaseAngle=90; // Works for 0 to ~250 degrees
 MembraneThickness=1;
 MembraneGap=3;
 SensorCableHoleDiameter=5;
 MountHeight=30;
-MountHoleDiameter=5; // External diameter of the threaded insert for the mount screw
+MountHoleDiameter=4; // External diameter of the threaded insert for the mount screw
 
 // TODO:
 // - Create the mount
@@ -84,12 +87,18 @@ difference() {
   mountHole();
 }
 
+
+mountHoleZ=3*MountHeight/4;
 // The mount
 difference() {
   mountRing();
-  translate([holeCenterX,0,3*MountHeight/4])
+  translate([holeCenterX,0,mountHoleZ])
   rotate([-90,0,0])
   cylinder(d=MountHoleDiameter, h=(HoleDiameter+2*HoleEnforcementThickness)/2);
 
+  translate([holeCenterX, holeCenterY-HoleDiameter/2-(HoleEnforcementThickness-MountHoleDiameter)/2, mountHoleZ])
+  rotate([-90,-90,0])
+  nutcatch_sidecut(str("M",MountHoleDiameter), l=100, clk=0.1, clh=0.1, clsl=0.1);
 }
+
 
