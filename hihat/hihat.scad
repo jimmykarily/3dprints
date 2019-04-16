@@ -1,14 +1,15 @@
 // Settings
 $fn=60;
-Radius = 200; // Distance from the center of the hole to the edge
-HoleDiameter = 10;
+Radius = 180; // Distance from the center of the hole to the edge
+HoleDiameter = 6;
 HoleEnforcementThickness=HoleDiameter;
-Thickness=20;
+Thickness=10;
 BaseAngle=90; // Works for 0 to ~250 degrees
-MembraneThickness=3;
-MembraneGap=5;
+MembraneThickness=1;
+MembraneGap=3;
 SensorCableHoleDiameter=5;
-MountHeight=40;
+MountHeight=30;
+MountHoleDiameter=5; // External diameter of the threaded insert for the mount screw
 
 // TODO:
 // - Create the mount
@@ -75,7 +76,7 @@ difference() {
   pie_slice(r=basicSliceRadius-holeCenterX, h=Thickness/2, a=BaseAngle);
 
   // Sensor cable hole
-  sensorCableHoleCenterX = holeCenterX + HoleEnforcementThickness + MembraneThickness*3;
+  sensorCableHoleCenterX = holeCenterX + HoleEnforcementThickness + SensorCableHoleDiameter + MembraneThickness*3;
   sensorCableHoleCenterY = sensorCableHoleCenterX * tan(BaseAngle/2);
   translate([sensorCableHoleCenterX, sensorCableHoleCenterY, Thickness/2])
   cylinder(d=SensorCableHoleDiameter, h=Thickness, center=true);
@@ -84,4 +85,11 @@ difference() {
 }
 
 // The mount
-mountRing();
+difference() {
+  mountRing();
+  translate([holeCenterX,0,3*MountHeight/4])
+  rotate([-90,0,0])
+  cylinder(d=MountHoleDiameter, h=(HoleDiameter+2*HoleEnforcementThickness)/2);
+
+}
+
