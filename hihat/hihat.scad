@@ -5,6 +5,12 @@ include <../nutsnbolts/cyl_head_bolt.scad>;
 $fn=60;
 Radius = 180; // Distance from the center of the hole to the edge
 HoleDiameter = 6;
+
+// The outer diameter of the ring magnet that you are going to glue
+// at the bottom side (for open/closed reed switch)
+RingMagnetOuterDiameter=7;
+RingMagnetHeight=1;
+
 HoleEnforcementThickness=HoleDiameter*1.5;
 Thickness=10;
 BaseAngle=90; // Works for 0 to ~250 degrees
@@ -61,6 +67,11 @@ module base() {
   }
 }
 
+module ringMagnetSocket() {
+  translate([holeCenterX, holeCenterY, RingMagnetHeight/2])
+  cylinder(d=RingMagnetOuterDiameter, h=RingMagnetHeight, center=true);
+}
+
 difference() {
   base();
 
@@ -85,6 +96,7 @@ difference() {
   cylinder(d=SensorCableHoleDiameter, h=Thickness, center=true);
 
   mountHole();
+  ringMagnetSocket();
 }
 
 
@@ -99,6 +111,7 @@ difference() {
   translate([holeCenterX, holeCenterY-HoleDiameter/2-(HoleEnforcementThickness-MountHoleDiameter)/2, mountHoleZ])
   rotate([-90,-90,0])
   nutcatch_sidecut(str("M",MountHoleDiameter), l=100, clk=0.1, clh=0.1, clsl=0.1);
+  ringMagnetSocket();
 }
 
 
