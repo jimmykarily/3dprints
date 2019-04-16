@@ -4,7 +4,7 @@ Radius = 200; // Distance from the center of the hole to the edge
 HoleDiameter = 10;
 HoleEnforcementThickness=HoleDiameter;
 Thickness=20;
-BaseAngle=110; // Works for 0 to ~250 degrees
+BaseAngle=90; // Works for 0 to ~250 degrees
 MembraneThickness=3;
 MembraneGap=5;
 SensorCableHoleDiameter=5;
@@ -64,14 +64,18 @@ difference() {
   membraneMarginY = HoleEnforcementThickness + HoleDiameter/2 + MembraneThickness * 2;
   membraneMarginX = membraneMarginY / tan(BaseAngle/2);
   translate([membraneMarginX, membraneMarginY, Thickness - MembraneThickness - MembraneGap])
-  pie_slice(r=basicSliceRadius, h=Thickness, a=BaseAngle);
+  difference() {
+    pie_slice(r=basicSliceRadius, h=Thickness, a=BaseAngle);
+    cylinder(d=HoleDiameter+2*HoleEnforcementThickness, h=MountHeight, center=true);
+  }
+
 
   // Sensor pocket (shallow one, with the margin)
   translate([holeCenterX, holeCenterY, Thickness - MembraneThickness])
   pie_slice(r=basicSliceRadius-holeCenterX, h=Thickness/2, a=BaseAngle);
 
   // Sensor cable hole
-  sensorCableHoleCenterX = holeCenterX + HoleEnforcementThickness + 3;
+  sensorCableHoleCenterX = holeCenterX + HoleEnforcementThickness + MembraneThickness*3;
   sensorCableHoleCenterY = sensorCableHoleCenterX * tan(BaseAngle/2);
   translate([sensorCableHoleCenterX, sensorCableHoleCenterY, Thickness/2])
   cylinder(d=SensorCableHoleDiameter, h=Thickness, center=true);
