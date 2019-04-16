@@ -12,7 +12,7 @@ RingMagnetOuterDiameter=7;
 RingMagnetHeight=1;
 
 HoleEnforcementThickness=HoleDiameter*1.5;
-Thickness=10;
+Thickness=10; // The total thickness of the (sides of) the hihat
 BaseAngle=90; // Works for 0 to ~250 degrees
 MembraneThickness=1;
 MembraneGap=3;
