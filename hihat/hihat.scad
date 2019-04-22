@@ -2,21 +2,21 @@
 include <../nutsnbolts/cyl_head_bolt.scad>;
 
 // Settings
-$fn=60;
+$fn=100;
 Radius = 180; // Distance from the center of the hole to the edge
-HoleDiameter = 6;
+HoleDiameter = 5.3;
 
 // The outer diameter of the ring magnet that you are going to glue
 // at the bottom side (for open/closed reed switch)
-RingMagnetOuterDiameter=7;
-RingMagnetHeight=1;
+RingMagnetOuterDiameter=13;
+RingMagnetHeight=1.5;
 
-HoleEnforcementThickness=HoleDiameter*1.5;
-Thickness=10; // The total thickness of the (sides of) the hihat
+HoleEnforcementThickness=HoleDiameter*1.8;
+Thickness=12; // The total thickness of the (sides of) the hihat
 BaseAngle=90; // Works for 0 to ~250 degrees
 MembraneThickness=1;
-MembraneGap=3;
-SensorCableHoleDiameter=5;
+MembraneGap=5;
+SensorCableHoleDiameter=6;
 MountHeight=30;
 MountHoleDiameter=4; // External diameter of the threaded insert for the mount screw
 
@@ -94,6 +94,10 @@ difference() {
   sensorCableHoleCenterY = sensorCableHoleCenterX * tan(BaseAngle/2);
   translate([sensorCableHoleCenterX, sensorCableHoleCenterY, Thickness/2])
   cylinder(d=SensorCableHoleDiameter, h=Thickness, center=true);
+  // Plug box socket
+  sensorBoxDiameter=Thickness/4;
+  translate([sensorCableHoleCenterX, sensorCableHoleCenterY, Thickness-MembraneThickness-MembraneGap-sensorBoxDiameter/2])
+  cylinder(d=SensorCableHoleDiameter*2, h=sensorBoxDiameter, center=true);
 
   mountHole();
   ringMagnetSocket();
@@ -106,12 +110,10 @@ difference() {
   mountRing();
   translate([holeCenterX,0,mountHoleZ])
   rotate([-90,0,0])
-  cylinder(d=MountHoleDiameter, h=(HoleDiameter+2*HoleEnforcementThickness)/2);
+  cylinder(d=MountHoleDiameter*1.1, h=(HoleDiameter+2*HoleEnforcementThickness)/2);
 
   translate([holeCenterX, holeCenterY-HoleDiameter/2-(HoleEnforcementThickness-MountHoleDiameter)/2, mountHoleZ])
   rotate([-90,-90,0])
   nutcatch_sidecut(str("M",MountHoleDiameter), l=100, clk=0.1, clh=0.1, clsl=0.1);
   ringMagnetSocket();
 }
-
-
