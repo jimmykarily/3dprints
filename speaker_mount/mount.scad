@@ -8,7 +8,7 @@ mountThickness=4;
 
 wallScrewDiameter=5;
 
-mountHoleExtrusion=6;
+mountHoleExtrusion=16;
 mountHoleDiameter=5;
 mountHoleHeight=mountHeight*0.5;
 
@@ -52,17 +52,19 @@ module wallMount() {
 
 module speakerMount(holeDiameterRatio) {
   union() {
-    translate([(mountWidth-mountHoleDiameter-wallThickness*2)/2,(mountHeight-mountHoleHeight)/2-mountThickness,(mountHoleDiameter+wallThickness*2)/2+mountThickness])
+    translate([(mountWidth-mountHoleDiameter-wallThickness*2)/2,(mountHeight-mountHoleHeight)/2-mountThickness,mountThickness+mountHoleExtrusion])
     cube(size = [mountHoleDiameter+wallThickness*2,mountThickness,(mountHoleDiameter+wallThickness*2)/2+mountThickness], center=false);
 
     translate([mountWidth/2,(mountHeight-mountHoleHeight)/2-mountThickness,mountThickness+mountHoleExtrusion])
     rotate([-90])
     cylinder(h=mountThickness,d=mountHoleDiameter+wallThickness*2, center=false);
 
-
     translate([mountWidth/2,(mountHeight-mountHoleHeight)/2,mountThickness+mountHoleExtrusion])
     rotate([-90])
     cylinder(h=mountHoleHeight,d=mountHoleDiameter*holeDiameterRatio, center=false);
+
+    translate([(mountWidth-mountHoleDiameter-wallThickness*2)/2,(mountHeight-mountHoleHeight)/2,mountThickness+mountHoleExtrusion+(mountHoleDiameter+wallThickness*2)/2])
+    cube(size = [mountHoleDiameter+wallThickness*2,mountHoleHeight,mountThickness], center=false);
   }
 }
 
