@@ -51,9 +51,11 @@ module wallMount() {
 }
 
 module speakerMount(holeDiameterRatio) {
+  mountGap=1;
+
   union() {
     translate([(mountWidth-mountHoleDiameter-wallThickness*2)/2,(mountHeight-mountHoleHeight)/2-mountThickness,mountThickness+mountHoleExtrusion])
-    cube(size = [mountHoleDiameter+wallThickness*2,mountThickness,(mountHoleDiameter+wallThickness*2)/2+mountThickness], center=false);
+    cube(size = [mountHoleDiameter+wallThickness*2,mountThickness,(mountHoleDiameter+wallThickness*2)/2+mountThickness+mountGap], center=false);
 
     translate([mountWidth/2,(mountHeight-mountHoleHeight)/2-mountThickness,mountThickness+mountHoleExtrusion])
     rotate([-90])
@@ -63,7 +65,7 @@ module speakerMount(holeDiameterRatio) {
     rotate([-90])
     cylinder(h=mountHoleHeight,d=mountHoleDiameter*holeDiameterRatio, center=false);
 
-    translate([(mountWidth-mountHoleDiameter-wallThickness*2)/2,(mountHeight-mountHoleHeight)/2,mountThickness+mountHoleExtrusion+(mountHoleDiameter+wallThickness*2)/2])
+    translate([(mountWidth-mountHoleDiameter-wallThickness*2)/2,(mountHeight-mountHoleHeight)/2,mountThickness+mountHoleExtrusion+(mountHoleDiameter+wallThickness*2)/2+mountGap])
     cube(size = [mountHoleDiameter+wallThickness*2,mountHoleHeight,mountThickness], center=false);
   }
 }
